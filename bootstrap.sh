@@ -5,7 +5,9 @@
 # Credit to https://github.com/holman/dotfiles
 
 
-DOTFILES_ROOT="$(pwd -P)/dots"
+DOTFILES_ROOT="$(pwd -P)"
+DOTFILES_DEST="$HOME/.dotfiles"
+DOTFILES_SYMS="$DOTFILES_ROOT/dots"
 
 set -e
 
@@ -16,7 +18,7 @@ info () {
 }
 
 user () {
-  printf "\r  [ \033[0;33m??\033[0m ] $1\n"
+  printf "\r  [ \033[0;33m??\033[0m ] $1 "
 }
 
 success () {
@@ -56,80 +58,36 @@ setup_gitconfig () {
   fi
 }
 
-
 link_file () {
   local src=$1 dst=$2
 
-  local overwrite= backup= skip=
-  local action=
-
   if [ -f "$dst" -o -d "$dst" -o -L "$dst" ]
   then
-
-    if [ "$overwrite_all" == "false" ] && [ "$backup_all" == "false" ] && [ "$skip_all" == "false" ]
-    then
-
-      local currentSrc="$(readlink $dst)"
-
-      if [ "$currentSrc" == "$src" ]
+      if [ "$(readlink $dst)" == "$src" ]
       then
-
-        skip=true;
-
+        # if the link we're trying to make exists, skip
+        success "SKIPPED. Link to $src already exists"
+        return 0;
       else
-
-        user "File already exists: $dst ($(basename "$src")), what do you want to do?\n\
-        [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all?"
+        user "Target exists: $dst ([s]kip, [o]verwrite)?"
         read -n 1 action
 
         case "$action" in
           o )
-            overwrite=true;;
-          O )
-            overwrite_all=true;;
-          b )
-            backup=true;;
-          B )
-            backup_all=true;;
+            rm -rf "$dst"
+            success "removed $dst"
+            ;;
           s )
-            skip=true;;
-          S )
-            skip_all=true;;
+            success "skipped $src"
+            return 0;
+            ;;
           * )
             ;;
         esac
-
       fi
-
-    fi
-
-    overwrite=${overwrite:-$overwrite_all}
-    backup=${backup:-$backup_all}
-    skip=${skip:-$skip_all}
-
-    if [ "$overwrite" == "true" ]
-    then
-      rm -rf "$dst"
-      success "removed $dst"
-    fi
-
-    if [ "$backup" == "true" ]
-    then
-      mv "$dst" "${dst}.backup"
-      success "moved $dst to ${dst}.backup"
-    fi
-
-    if [ "$skip" == "true" ]
-    then
-      success "skipped $src"
-    fi
   fi
-
-  if [ "$skip" != "true" ]  # "false" or empty
-  then
-    ln -s "$1" "$2"
-    success "linked $1 to $2"
-  fi
+  ln -s "$src" "$dst"
+  success "linked $src to $dst"
 }
 
 install_dotfiles () {
@@ -137,7 +95,7 @@ install_dotfiles () {
 
   local overwrite_all=false backup_all=false skip_all=false
 
-  for src in $(find -H "$DOTFILES_ROOT" -type f -not -path '*.git*')
+  for src in $(find -H "$DOTFILES_SYMS" -type f -not -path '*.git*')
   do
     dst="$HOME/.$(basename ".${src}")"
     link_file "$src" "$dst"
@@ -146,3 +104,8 @@ install_dotfiles () {
 
 setup_gitconfig
 install_dotfiles
+
+# symlink this repo to home folder for
+# constitent access for zshrc
+link_file $DOTFILES_ROOT $DOTFILES_DEST
+
