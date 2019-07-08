@@ -12,7 +12,7 @@ fi
 # Load various config files
 DFIR="$HOME/.dotfiles"
 
-for file in "$DFIR"/{exports,aliases}/*.zsh
+for file in "$DFIR"/{exports,aliases,functions,inits}/*.zsh
 do
   source $file
 done
