@@ -3,9 +3,13 @@
 # install things
 
 
+# oh-my-zsh 
+###############################################################################
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+
+
 # PYENV
-#
-#
+###############################################################################
 CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 
 # install pyenv
@@ -22,10 +26,8 @@ eval "$(pyenv virtualenv-init -)"
 env PYTHON_CONFIGURE_OPTS="--enable-framework" pyenv install 3.6.7
 
 
-
-
-
-# install Homebrew
+# homebrew
+###############################################################################
 if ! command -v brew; then
     echo; echo -e "Installing Homebrew ..."; echo
     /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -36,6 +38,10 @@ brew update
 
 # Upgrade any already-installed formulae.
 brew upgrade
+
+
+# brew software installs
+###############################################################################
 
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 brew install findutils
