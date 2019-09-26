@@ -3,12 +3,6 @@ ZSH_THEME="robbyrussell"
 
 plugins=(rsync golang)
 
-# local environment variables
-if [[ -a ~/.localrc ]]
-then
-  source ~/.localrc
-fi
-
 # Load various config files
 DFIR="$HOME/.dotfiles"
 
@@ -16,5 +10,18 @@ for file in "$DFIR"/{exports,aliases,functions,inits}/*.zsh
 do
   source $file
 done
+
+# local environment variables
+if [[ -a ~/.localrc ]]
+then
+  source ~/.localrc
+fi
+
+# local paths
+if [[ -a ~/.paths ]]
+then
+  source ~/.paths
+fi
+
 
 source $ZSH/oh-my-zsh.sh
