@@ -17,10 +17,10 @@ then
   source ~/.localrc
 fi
 
-# local paths
-if [[ -a ~/.paths ]]
+# local extra paths, aliases, etc.
+if [[ -a ~/.extras ]]
 then
-  source ~/.paths
+  source ~/.extras
 fi
 
 
