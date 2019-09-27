@@ -3,6 +3,9 @@ ZSH_THEME="robbyrussell"
 
 plugins=(rsync golang)
 
+# turn off nomatch error
+setopt +o nomatch
+
 # Load various config files
 DFIR="$HOME/.dotfiles"
 

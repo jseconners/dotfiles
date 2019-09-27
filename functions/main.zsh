@@ -21,3 +21,21 @@ function fs() {
 		du $arg .[^.]* ./*;
 	fi;
 }
+
+function cclean() { 
+
+	if [ "$(uname -s)" = "Darwin" ]; then
+		echo "Clearing caches and trash..."
+		# clean caches and trash
+		dirs=(/Library/Caches ~/Library/Caches ~/.Trash)
+		for d in $dirs
+		do
+			if [ -d "$d" ]; then
+				sudo rm -rf "$d"/*
+			fi
+		done
+
+		echo "Flushing DNS cache..."
+		sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed
+	fi
+}
