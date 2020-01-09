@@ -39,3 +39,13 @@ function cclean() {
 		sudo dscacheutil -flushcache;sudo killall -HUP mDNSResponder;say cache flushed
 	fi
 }
+
+function findinfile() { 
+	if [ "$#" -ne 2 ]; then
+		echo "Usage: findinfile DIR SEARCHTEXT"
+	fi
+	local searchdir=$1
+	local searchtxt=$2
+
+	find "$1" -type f -exec fgrep -H "$2" {} \;
+}

@@ -4,3 +4,6 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 
 # Make Python use UTF-8 encoding for output to stdin, stdout, and stderr.
 export PYTHONIOENCODING='UTF-8';
+
+# poetry
+export PATH="$HOME/.poetry/bin:$PATH"
